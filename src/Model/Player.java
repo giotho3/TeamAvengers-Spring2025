@@ -1,10 +1,11 @@
-/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
+package Model;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
 
  */
 
 import java.util.Map;
 
-public class Player extends Character {
+public class Player extends Character
+{
     private String currentRoom;
 
     public Player(String name, int health, int attackPower, String startRoom) {
@@ -26,5 +27,13 @@ public class Player extends Character {
 
     public String getCurrentRoom() {
         return currentRoom;
+    }
+
+    public void respawn() {
+        System.out.println("Respawn method called");
+    }
+
+    public void setDamage(int modifier) {
+        attackPower += modifier;
     }
 }

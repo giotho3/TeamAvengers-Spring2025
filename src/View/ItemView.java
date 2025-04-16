@@ -24,9 +24,10 @@ public class ItemView {
             System.out.println("Your inventory is empty.");
         } else {
             System.out.println("Inventory:");
-            for (int i = 0; i < inventory.size(); i++) {
-                System.out.println((i + 1) + ". " + inventory.get(i).getName());
+            for (Item item : inventory) {
+                System.out.println(item.getName());
             }
+
         }
     }
 
