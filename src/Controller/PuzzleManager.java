@@ -1,6 +1,8 @@
-/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
+package Controller;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
 
  */
+
+import Model.Puzzle;
 
 import java.util.HashMap;
 import java.util.Map;

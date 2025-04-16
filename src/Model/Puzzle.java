@@ -1,4 +1,4 @@
-/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
+package Model;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
 
  */
 
@@ -20,8 +20,8 @@ public class Puzzle {
     }
 
     public void describe() {
-        System.out.println("Puzzle Location: " + location);
-        System.out.println("Puzzle: " + description);
+        System.out.println("Model.Puzzle Location: " + location);
+        System.out.println("Model.Puzzle: " + description);
     }
 
     public boolean attemptSolution(String userAttempt) {

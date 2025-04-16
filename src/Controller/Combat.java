@@ -1,11 +1,14 @@
-/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
+package Controller;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
 
  */
+
+import Model.Monster;
+import Model.Player;
 
 import java.util.Scanner;
 
 public class Combat {
-    private Player player;
+    private final Player player;
     private Monster monster;
     private boolean battleActive;
     private Scanner scanner;
@@ -78,6 +81,6 @@ public class Combat {
 
     private void triggerRespawn() {
         System.out.println("Respawning player at last save point...");
-        player.respawn(); // Ensure Player class has a respawn method
+        player.respawn(); // Ensure Model.Player class has a respawn method
     }
 }
