@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class Player extends Character
 {
-    private String currentRoom;
+    private int currentRoom;
 
-    public Player(String name, int health, int attackPower, String startRoom) {
+    public Player(String name, int health, int attackPower, Room startRoom) {
         super(name, health, attackPower);
-        this.currentRoom = startRoom;
+        this.currentRoom = startRoom.getRoomID();
     }
 
     public void move(String direction, Map<String, Room> rooms) {
@@ -36,4 +36,5 @@ public class Player extends Character
     public void setDamage(int modifier) {
         attackPower += modifier;
     }
+
 }
