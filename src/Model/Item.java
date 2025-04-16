@@ -1,31 +1,34 @@
 package Model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 /**Class: Model.ItemModel
  * Giovanni Thomas
  * Course: ITEC 3860 Spring 2025
- * Written: April 10, 2025
- *
+ * Written: April 10, 2025.
  * The ItemModel Class is responsible for creating Item objects. These objects will consist of
  * Weapons, Armor and Consumables
  */
 
-public class Item {
+public abstract class Item {
 
-    String id;
-    String name;
+    private final String type;
+    private final String name;
     String desc;
-    int modifier;
+    int feature;
+    int location;
 
-    public Item(String id, String name, String desc, int modifier) {
-        this.id = id;
+    public Item(String type, String name, String desc, int feature, int location) {
+        this.type = type;
         this.name = name;
         this.desc = desc;
-        this.modifier = modifier;
+        this.feature = feature;
+        this.location = location;
     }
-
-    public String getId() { return name; }
 
     public String getName() {
         return name;
@@ -35,19 +38,10 @@ public class Item {
         return desc;
     }
 
-    public int getModifier() {
-        return modifier;
+    public int getFeature() {
+        return feature;
     }
 
-    public void applyModifier(Player player) {
-
-    }
-
-    //Pulls items from DB and puts them into an ArrayList
-    public ArrayList<Item> loadItems() {
-        ArrayList<Item> itemAL = new ArrayList<>();
-
-        return itemAL;
-    }
+    abstract void applyFeature(Player player);
 
 }

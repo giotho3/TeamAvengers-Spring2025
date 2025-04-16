@@ -10,6 +10,7 @@ package Controller;
  */
 
 import Model.Item;
+import Model.Player;
 import View.ItemView;
 
 import java.util.ArrayList;
@@ -18,25 +19,26 @@ public class ItemController {
 
     private final Player player;
     private final ItemView itemView;
+    private final ArrayList<Item> inventory = new ArrayList<>();
 
     public ItemController(Player player, ItemView itemView) {
         this.player = player;
         this.itemView = itemView;
     }
 
-    public void addItemToInventory(Item item) {
-        player.getInventory().add(item);
+    public void addToInventory(Item item) {
+        inventory.add(item);
         itemView.displayPickupMessage(item);
     }
 
-    public void removeItemFromInventory(Item item) {
-        player.getInventory().remove(item);
+    public void removeFromInventory(Item item) {
+        inventory.remove(item);
     }
 
     public void useItem(Item item) {
-        if (player.getInventory().contains(item)) {
-            item.applyModifier(player); // Assume your Item class has logic for this
-            removeItemFromInventory(item);
+        if (inventory.contains(item)) {
+            item.applyModifier(player);
+            removeFromInventory(item);
             itemView.displayUseItemResult(item, true);
         } else {
             itemView.displayUseItemResult(item, false);
@@ -44,11 +46,10 @@ public class ItemController {
     }
 
     public void showInventory() {
-        itemView.displayInventory(player.getInventory());
+        itemView.displayInventory(inventory);
     }
 
     public void inspectItem(int index) {
-        ArrayList<Item> inventory = player.getInventory();
         if (index >= 0 && index < inventory.size()) {
             itemView.displayItemDetails(inventory.get(index));
         } else {

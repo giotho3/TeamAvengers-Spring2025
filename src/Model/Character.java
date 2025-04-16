@@ -1,3 +1,5 @@
+package Model;
+
 public abstract class Character {
     protected String name;
     protected int health;
@@ -10,7 +12,7 @@ public abstract class Character {
     }
 
     public String getName() {
-        return name; // Now Player and Monster both inherit this method!
+        return name; // Now Model.Player and Model.Monster both inherit this method!
     }
 
     public int getHealth() {
@@ -33,4 +35,5 @@ public abstract class Character {
         System.out.println(name + " attacks " + target.getName() + " for " + attackPower + " damage!");
         target.takeDamage(attackPower);
     }
+
 }
