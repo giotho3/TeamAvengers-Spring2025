@@ -1,4 +1,4 @@
-/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
+package View;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
 This class contains Functional Requirement 7
  */
 

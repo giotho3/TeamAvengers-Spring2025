@@ -37,7 +37,7 @@ public class ItemController {
 
     public void useItem(Item item) {
         if (inventory.contains(item)) {
-            item.applyModifier(player);
+            item.applyFeature(player);
             removeFromInventory(item);
             itemView.displayUseItemResult(item, true);
         } else {

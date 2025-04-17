@@ -6,5 +6,10 @@ public class Weapon extends Item{
         super(id, name, desc, modifier, location);
     }
 
+    @Override
+    void applyFeature(Player player) {
+        player.setDamage();
+    }
+
 
 }
