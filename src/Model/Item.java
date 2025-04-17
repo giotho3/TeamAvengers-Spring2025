@@ -1,11 +1,5 @@
 package Model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-
 /**Class: Model.ItemModel
  * Giovanni Thomas
  * Course: ITEC 3860 Spring 2025
@@ -16,17 +10,19 @@ import java.util.Scanner;
 
 public abstract class Item {
 
+    int id;
     private final String type;
     private final String name;
-    String desc;
-    int feature;
+    String description;
+    String features;
     int location;
 
-    public Item(String type, String name, String desc, int feature, int location) {
+    public Item(int id, String type, String name, String features, String description, int location) {
+        this.id = id;
         this.type = type;
         this.name = name;
-        this.desc = desc;
-        this.feature = feature;
+        this.description = description;
+        this.features = features;
         this.location = location;
     }
 
@@ -35,11 +31,11 @@ public abstract class Item {
     }
 
     public String getDesc() {
-        return desc;
+        return description;
     }
 
-    public int getFeature() {
-        return feature;
+    public String getFeatures() {
+        return features;
     }
 
     abstract void applyFeature(Player player);
