@@ -14,14 +14,17 @@ public class Main {
         System.out.println(util.askForName());
         Scanner input = new Scanner(System.in);
         String action = input.next();
+        int currentRoom = 1;
 
-        Player player = new Player(action, 50, 10, 1);
+        Player player = new Player(action, 50, 10, currentRoom);
 
         while(gameRunning) {
             action = input.nextLine();
 
-            if(action.equals("n") || action.equals("s") || action.equals("e") || action.equals("w")) {
-                player.move(action);
+            if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
+            || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
+               // player.move(action);
+                currentRoom = Navigation.navigate(action, currentRoom);
             } else if (action.equals("drop")) {
 
             } else if (action.equals("look around")) {

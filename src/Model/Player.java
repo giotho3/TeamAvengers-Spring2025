@@ -8,14 +8,14 @@ public class Player extends Character
 {
     private int currentRoom;
 
-    public Player(String name, int health, int attackPower, Room startRoom) {
+    public Player(String name, int health, int attackPower, int startRoom) {
         super(name, health, attackPower);
-        this.currentRoom = startRoom.getRoomID();
+        this.currentRoom = startRoom;
     }
 
     public void move(String direction, Map<String, Room> rooms) {
         Room current = rooms.get(currentRoom);
-        String nextRoom = current.getExit(direction);
+        String nextRoom = current.getExits(direction);
 
         if (nextRoom != null) {
             currentRoom = nextRoom;

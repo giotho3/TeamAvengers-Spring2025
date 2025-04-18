@@ -6,8 +6,8 @@ public class Monster extends Character
 {
     private String description;
 
-    public Monster(String name, int health, int attackPower, String description) {
-        super(name, health, attackPower);
+    public Monster(int id, String name, int health, int attackPower, String description) {
+        super(id, name, health, attackPower);
         this.description = description;
     }
 
