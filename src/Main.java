@@ -34,7 +34,7 @@ public class Main {
             } else if (action.equals("fight")) {
                 //attack and flee methods go in here
             } else if (action.equals("grimoire")) {
-
+                //displays entire inventory, "-apparel", "-weapons", "-spells", "-potions"
             } else if (action.equals("wear " + KEYWORD)) {
 
             } else if (action.equals("equip " + KEYWORD)) {

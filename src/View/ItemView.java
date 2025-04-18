@@ -16,7 +16,7 @@ public class ItemView {
     public void displayItemDetails(Item item) {
         System.out.println("Item: " + item.getName());
         System.out.println("Description: " + item.getDesc());
-        System.out.println("Modifier: " + item.getFeature());
+        System.out.println("Features: " + item.getFeatures());
     }
 
     public void displayInventory(ArrayList<Item> inventory) {
