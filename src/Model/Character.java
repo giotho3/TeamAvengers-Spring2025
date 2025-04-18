@@ -1,11 +1,13 @@
 package Model;
 
 public abstract class Character {
+    protected int id;
     protected String name;
     protected int health;
     protected int attackPower;
 
-    public Character(String name, int health, int attackPower) {
+    public Character(int id, String name, int health, int attackPower) {
+        this.id = id;
         this.name = name;
         this.health = health;
         this.attackPower = attackPower;
