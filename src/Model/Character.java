@@ -34,7 +34,7 @@ public abstract class Character {
     /** Update health status in SQLite **/
     private void updateHealthInDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement("UPDATE Characters SET health = ? WHERE id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("UPDATE PlayerState SET health_points = ? WHERE id = ?")) {
             stmt.setInt(1, health);
             stmt.setInt(2, id);
             stmt.executeUpdate();
@@ -47,7 +47,7 @@ public abstract class Character {
     protected void die() {
         System.out.println(name + " has been defeated!");
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement("UPDATE Characters SET health = 0 WHERE id = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("UPDATE PlayerState SET health_points = 0 WHERE id = ?")) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {

@@ -1,5 +1,6 @@
 package Model;
 
+
 import java.sql.*;
 
 public class Monster extends Character {
@@ -7,11 +8,11 @@ public class Monster extends Character {
     private String description;
     private String difficulty; // Now stored as "Easy" or "Hard"
     private int roomNumber;
-
+    public String name;
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
-    public Monster(int id, String name, int health, int attackPower, String type, String difficulty, String description, int roomNumber) {
-        super(id, name, health, attackPower);
+    public Monster(int id, String name, String type, String difficulty, String description, int roomNumber) {
+        super(id, name, 0, 0); // Only pass relevant attributes to the Character superclass
         this.type = type;
         this.difficulty = difficulty;
         this.description = description;
@@ -21,7 +22,7 @@ public class Monster extends Character {
     public String getType() { return type; }
     public String getDescription() { return description; }
     public String getDifficulty() { return difficulty; }
-
+    public String getName() { return name;}
     /** Load a monster dynamically when entering a room **/
     public static Monster loadMonster(int roomNumber) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -39,7 +40,7 @@ public class Monster extends Character {
                         adjustHealthBasedOnDifficulty(difficulty),
                         adjustAttackBasedOnDifficulty(difficulty),
                         rs.getString("monster_type"),
-                        difficulty,
+                        rs.getString("monster_difficulty"),
                         rs.getString("monster_description"),
                         rs.getInt("room_number")
                 );
@@ -63,7 +64,7 @@ public class Monster extends Character {
     /** Override defeat logic to remove monster from room **/
     @Override
     public void die() {
-        System.out.println(name + " has been slain!");
+        System.out.println(getName() + " has been slain!");
         removeMonsterFromDatabase();
     }
 

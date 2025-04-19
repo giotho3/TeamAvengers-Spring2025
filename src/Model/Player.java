@@ -135,4 +135,41 @@ public class Player extends Character {
         System.out.println("Respawning at last save point...");
         savePlayerState();
     }
+
+    public void useItem(Item item) {
+        switch (item.getType()) {
+            case "Apparel":
+                health += item.getEffectValue(); // Boost defense
+                System.out.println("Equipped " + item.getName() + ".");
+                break;
+            case "Weapons":
+                attackPower += item.getEffectValue(); // Boost attack strength
+                System.out.println("Wielded " + item.getName() + ".");
+                break;
+            case "Spells":
+                castSpell(item); // Trigger magic effects
+                break;
+            case "Potions":
+                health += item.getEffectValue();
+                inventory.remove(item); // Potions are consumables
+                break;
+            default:
+                System.out.println("Used " + item.getName() + ".");
+        }
+    }
+
+    public void pickUpItem(Item item) {
+        if (item == null) {
+            System.out.println("No valid item selected.");
+            return;
+        }
+
+        inventory.add(item);
+        System.out.println("Picked up " + item.getName() + ".");
+
+        // Remove item from room or mark it as picked up
+        removeItemFromRoom(item.getId());
+
+        savePlayerState(); // Ensure inventory is saved
+    }
 }
