@@ -1,10 +1,14 @@
 package Model;
 
+import java.sql.*;
+
 public abstract class Character {
     protected int id;
     protected String name;
     protected int health;
     protected int attackPower;
+
+    private static final String DB_URL = "jdbc:sqlite:src/identifier.sqlite";
 
     public Character(int id, String name, int health, int attackPower) {
         this.id = id;
@@ -13,29 +17,47 @@ public abstract class Character {
         this.attackPower = attackPower;
     }
 
-    public String getName() {
-        return name; // Now Model.Player and Model.Monster both inherit this method!
-    }
+    public String getName() { return name; }
+    public int getHealth() { return health; }
 
-    public int getHealth() {
-        return health;
-    }
-
+    /** Handle damage taken, update health in database **/
     public void takeDamage(int damage) {
         health -= damage;
         System.out.println(name + " takes " + damage + " damage! Health left: " + health);
+        updateHealthInDatabase();
+
         if (health <= 0) {
             die();
         }
     }
 
-    protected void die() {
-        System.out.println(name + " has been defeated!");
+    /** Update health status in SQLite **/
+    private void updateHealthInDatabase() {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE Characters SET health = ? WHERE id = ?")) {
+            stmt.setInt(1, health);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
+    /** Handle character defeat **/
+    protected void die() {
+        System.out.println(name + " has been defeated!");
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement("UPDATE Characters SET health = 0 WHERE id = ?")) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /** Combat interaction **/
     public void attack(Character target) {
         System.out.println(name + " attacks " + target.getName() + " for " + attackPower + " damage!");
         target.takeDamage(attackPower);
     }
-
 }

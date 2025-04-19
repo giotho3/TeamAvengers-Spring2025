@@ -1,86 +1,74 @@
-package Controller;/* Aaron Matthews ITEC 3860- Dr. Rahaf Baraket
-
- */
+package Controller;
 
 import Model.Monster;
 import Model.Player;
-
 import java.util.Scanner;
 
 public class Combat {
-    private final Player player;
+    private Player player;
     private Monster monster;
-    private boolean battleActive;
-    private Scanner scanner;
+    private boolean isPlayerTurn;
+    private Scanner scanner = new Scanner(System.in);
 
     public Combat(Player player, Monster monster) {
         this.player = player;
         this.monster = monster;
-        this.battleActive = true;
-        this.scanner = new Scanner(System.in);
+        this.isPlayerTurn = true; // Player starts first
         startBattle();
     }
 
+    /** Main turn-based combat loop **/
     private void startBattle() {
         System.out.println("A battle begins between " + player.getName() + " and " + monster.getName() + "!");
 
-        while (battleActive) {
-            playerTurn();
-            if (battleActive) {
+        while (player.getHealth() > 0 && monster.getHealth() > 0) {
+            if (isPlayerTurn) {
+                playerTurn();
+            } else {
                 monsterTurn();
             }
+            isPlayerTurn = !isPlayerTurn; // Toggle turn
         }
+
+        endBattle();
     }
 
+    /** Handles player's turn **/
     private void playerTurn() {
-        System.out.println("\nYour Turn! Choose an action: [Attack] [Flee]");
-        String action = scanner.nextLine().toLowerCase();
+        System.out.println("\nChoose action: [1] Attack  [2] Block  [3] Flee");
+        int choice = scanner.nextInt();
 
-        switch (action) {
-            case "attack":
+        switch (choice) {
+            case 1 -> {
+                System.out.println(player.getName() + " attacks!");
                 player.attack(monster);
-                checkBattleStatus();
-                break;
-            case "flee":
-                if (attemptFlee()) {
-                    System.out.println("You successfully fled the battle!");
-                    battleActive = false;
-                } else {
-                    System.out.println("Escape failed! The battle continues.");
-                }
-                break;
-            default:
-                System.out.println("Invalid action! Choose [Attack] or [Flee].");
-                playerTurn(); // Ask again for valid input
+            }
+            case 2 -> System.out.println(player.getName() + " blocks!");
+            case 3 -> {
+                System.out.println(player.getName() + " flees the battle!");
+                return;
+            }
+            default -> System.out.println("Invalid choice.");
         }
     }
 
+
+    /** Handles monster's turn **/
     private void monsterTurn() {
-        if (battleActive) {
-            System.out.println("\n" + monster.getName() + "'s Turn!");
-            monster.attack(player);
-            checkBattleStatus();
-        }
+        int damage = monster.getDifficulty().equalsIgnoreCase("Hard") ? 80 : 30; // Hard monsters hit harder
+        System.out.println(monster.getName() + " attacks!");
+        player.takeDamage(damage);
     }
 
-    private boolean attemptFlee() {
-        int fleeChance = (int) (Math.random() * 100); // 50% chance to escape
-        return fleeChance > 50;
-    }
-
-    private void checkBattleStatus() {
+    /** Process battle outcome **/
+    private void endBattle() {
         if (player.getHealth() <= 0) {
-            System.out.println("You have been defeated!");
-            battleActive = false;
-            triggerRespawn();
+            System.out.println(player.getName() + " has been defeated!");
+            player.respawn(); // Respawn player
         } else if (monster.getHealth() <= 0) {
-            System.out.println(monster.getName() + " has been defeated!");
-            battleActive = false;
+            System.out.println(monster.getName() + " was vanquished!");
+            monster.die(); // Remove monster from database
+            player.savePlayerState(); // Persist battle progress
         }
-    }
-
-    private void triggerRespawn() {
-        System.out.println("Respawning player at last save point...");
-        player.respawn(); // Ensure Model.Player class has a respawn method
     }
 }
