@@ -78,15 +78,16 @@ public class Fillers {
                 String difficulty = rs.getString("monster_difficulty");
                 String name = rs.getString("monster_name");
                 String desc = rs.getString("monster_description");
-                int health = 0;
-                int damage = 0;
+                String health = "";
+                String damage = "";
 
                 if (difficulty.equalsIgnoreCase("easy")) {
-
+                    //what we want hp and damage for an easy mob to be
                 } else if (difficulty.equalsIgnoreCase("hard")) {
-
+                    //what we want hp and damage for a hard mob to be
                 }
-                return new Monster(id, name, health, damage, desc);
+                int location = rs.getInt("room_number");
+                return new Monster(id, name, health, damage, desc, location);
 
             }
 
