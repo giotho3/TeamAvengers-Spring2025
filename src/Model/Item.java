@@ -14,10 +14,10 @@ public abstract class Item {
     private final String type;
     private final String name;
     String description;
-    String features;
+    int features;
     int location;
 
-    public Item(int id, String type, String name, String features, String description, int location) {
+    public Item(int id, String type, String name, int features, String description, int location) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -25,7 +25,6 @@ public abstract class Item {
         this.features = features;
         this.location = location;
     }
-
     public String getName() {
         return name;
     }
@@ -34,7 +33,7 @@ public abstract class Item {
         return description;
     }
 
-    public String getFeatures() {
+    public int getFeatures() {
         return features;
     }
 

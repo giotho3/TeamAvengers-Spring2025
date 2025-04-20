@@ -2,8 +2,6 @@ import Model.Room;
 
 public class Navigation {
 
-
-
     public static int navigate(String action, int roomNum) {
         Room currentRoom;
 

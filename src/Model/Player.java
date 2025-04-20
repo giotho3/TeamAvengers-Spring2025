@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 public class Player extends Character {
     private int currentRoom;
     int damage;
+    int armor;
     private List<Item> inventory;
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
@@ -182,5 +183,8 @@ public class Player extends Character {
 
     public void setDamage() {
         this.damage = damage;
+    }
+    public void setArmor() {
+        this.armor = armor;
     }
 }
