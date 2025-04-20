@@ -1,5 +1,7 @@
 package Model;
 
+
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,25 @@ public class Player extends Character {
     private List<Item> inventory;
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
+
+
+    public void setCurrentRoom(int currentRoom) { this.currentRoom = currentRoom; }
+    public int getCurrentRoom() { return currentRoom; }
+    public List<Item> getInventory() { return inventory; }
+    public void setInventory(List<Item> inventory) { this.inventory = inventory; }
+
+    public int getHealth() { return health; }
+    public void setHealth(int health) { this.health = Math.max(health, 0); } // Prevents negative health
+
+    public int getAttackPower() { return attackPower; }
+    public void setAttackPower(int attackPower) { this.attackPower = Math.max(attackPower, 0); } // Prevents negative attack power
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
 
     public Player(int id, String name, int health, int attackPower, int startRoom) {
         super(id, name, health, attackPower);
@@ -30,7 +51,7 @@ public class Player extends Character {
 
         String[] itemNames = inventoryData.split(",");
         for (String itemName : itemNames) {
-            parsedInventory.add(new Item(itemName.trim())); // Assuming `Item` has a constructor taking a name
+            parsedInventory.add(new ConcreteItem(itemName.trim())); // Assuming `Item` has a constructor taking a name
         }
         return parsedInventory;
     }
@@ -38,10 +59,11 @@ public class Player extends Character {
     /** Save player state **/
     public void saveGame() {
         String query = """
-                INSERT INTO PlayerState (player_id, current_room, inventory, health) 
+                INSERT INTO PlayerState (player_id, current_room, inventory) 
                 VALUES (?, ?, ?, ?) 
                 ON CONFLICT(player_id) DO UPDATE 
-                SET current_room=?, inventory=?, health=?""";
+                SET current_room=?, inventory=?;
+                """;
 
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             conn.setAutoCommit(false);
@@ -158,7 +180,7 @@ public class Player extends Character {
         saveGame();
     }
 
-    /** Getters for external use **/
-    public int getCurrentRoom() { return currentRoom; }
-    public List<Item> getInventory() { return inventory; }
+
+    
+
 }
