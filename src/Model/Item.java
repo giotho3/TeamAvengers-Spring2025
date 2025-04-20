@@ -39,6 +39,4 @@ public abstract class Item {
 
     public String getType() {return this.type;}
 
-    abstract void applyFeature(Player player);
-
 }

@@ -23,10 +23,8 @@ public class Main {
 
             if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
             || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
-               // player.move(action);
+                player.move(action);
                 currentRoom = Navigation.navigate(action, currentRoom);
-            } else if (action.equals("drop")) {
-
             } else if (action.equals("look around")) {
 
             } else if (action.equals("save")) {
@@ -35,13 +33,10 @@ public class Main {
                 //attack and flee methods go in here
             } else if (action.equals("grimoire")) {
                 //displays entire inventory, "-apparel", "-weapons", "-spells", "-potions"
-            } else if (action.equals("wear " + KEYWORD)) {
-
-            } else if (action.equals("equip " + KEYWORD)) {
-
-            } else if (action.equals("conjure " + KEYWORD)) {
-
-            } else if (action.equals("drink " + KEYWORD)) {
+            } else if (action.contains("wear") || action.contains("conjure")
+                    || action.contains("drink") || action.contains("equip")) {
+                String[] reqItem = action.split(" ");
+                player.useItem(reqItem[1]); //wear cape
 
             } else if (action.equals("interact")) {
                 //hint goes in here after 3 attempts

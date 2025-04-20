@@ -148,21 +148,25 @@ public class Player extends Character {
     }
 
     /** Use an item **/
-    public void useItem(Item item) {
-        switch (item.getType()) {
-            case "Armor" -> {
-                health += item.getFeatures();
-                System.out.println("Equipped " + item.getName() + ".");
+    public void useItem(String reqItem) {
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(reqItem)) {
+                switch (item.getType()) {
+                    case "Armor" -> {
+                        health += item.getFeatures();
+                        System.out.println("Equipped " + item.getName() + ".");
+                    }
+                    case "Weapons" -> {
+                        attackPower += item.getFeatures();
+                        System.out.println("Wielded " + item.getName() + ".");
+                    }
+                    case "Potions" -> {
+                        health += item.getFeatures();
+                        inventory.remove(item); // Potions are consumables
+                    }
+                    default -> System.out.println("Used " + item.getName() + ".");
+                }
             }
-            case "Weapons" -> {
-                attackPower += item.getFeatures();
-                System.out.println("Wielded " + item.getName() + ".");
-            }
-            case "Potions" -> {
-                health += item.getFeatures();
-                inventory.remove(item); // Potions are consumables
-            }
-            default -> System.out.println("Used " + item.getName() + ".");
         }
         saveGame();
     }
