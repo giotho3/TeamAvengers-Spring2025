@@ -1,18 +1,22 @@
 package Model;
 
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class Monster extends Character {
     private String type;
     private String description;
-    private String difficulty; // Now stored as "Easy" or "Hard"
+    private String difficulty;
     private int roomNumber;
-    public String name;
+    private static final Logger LOGGER = Logger.getLogger(Monster.class.getName());
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
     public Monster(int id, String name, String type, String difficulty, String description, int roomNumber) {
-        super(id, name, 0, 0); // Only pass relevant attributes to the Character superclass
+        super(id, name, adjustHealthBasedOnDifficulty(difficulty), adjustAttackBasedOnDifficulty(difficulty));
         this.type = type;
         this.difficulty = difficulty;
         this.description = description;
@@ -22,23 +26,20 @@ public class Monster extends Character {
     public String getType() { return type; }
     public String getDescription() { return description; }
     public String getDifficulty() { return difficulty; }
-    public String getName() { return name;}
-    /** Load a monster dynamically when entering a room **/
+
+    /** Dynamically load a monster when entering a room **/
     public static Monster loadMonster(int roomNumber) {
+        String query = "SELECT * FROM Monsters WHERE room_number = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Monsters WHERE room_number = ?")) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, roomNumber);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                String difficulty = rs.getString("monster_difficulty");
-
                 return new Monster(
                         rs.getInt("monster_id"),
                         rs.getString("monster_name"),
-                        adjustHealthBasedOnDifficulty(difficulty),
-                        adjustAttackBasedOnDifficulty(difficulty),
                         rs.getString("monster_type"),
                         rs.getString("monster_difficulty"),
                         rs.getString("monster_description"),
@@ -46,22 +47,22 @@ public class Monster extends Character {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.severe("Error loading monster from room " + roomNumber + ": " + e.getMessage());
         }
         return null;
     }
 
     /** Adjust health based on difficulty **/
     private static int adjustHealthBasedOnDifficulty(String difficulty) {
-        return difficulty.equalsIgnoreCase("Hard") ? 200 : 150;
+        return "Hard".equalsIgnoreCase(difficulty) ? 200 : 150;
     }
 
     /** Adjust attack power based on difficulty **/
     private static int adjustAttackBasedOnDifficulty(String difficulty) {
-        return difficulty.equalsIgnoreCase("Hard") ? 80 : 30;
+        return "Hard".equalsIgnoreCase(difficulty) ? 80 : 30;
     }
 
-    /** Override defeat logic to remove monster from room **/
+    /** Handle defeat logic **/
     @Override
     public void die() {
         System.out.println(getName() + " has been slain!");
@@ -70,14 +71,19 @@ public class Monster extends Character {
 
     /** Removes monster from the database after defeat **/
     private void removeMonsterFromDatabase() {
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM Monsters WHERE room_number = ?")) {
-
-            stmt.setInt(1, roomNumber);
-            stmt.executeUpdate();
-            System.out.println(name + " removed from room " + roomNumber);
+        try (Connection conn = DriverManager.getConnection(DB_URL)) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Monsters WHERE room_number = ?")) {
+                stmt.setInt(1, roomNumber);
+                stmt.executeUpdate();
+                conn.commit();
+                System.out.println(getName() + " removed from room " + roomNumber);
+            } catch (SQLException e) {
+                conn.rollback();
+                LOGGER.severe("Failed to remove monster: " + e.getMessage());
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.severe("Database connection error: " + e.getMessage());
         }
     }
 }

@@ -8,16 +8,18 @@ public class Combat {
     private Player player;
     private Monster monster;
     private boolean isPlayerTurn;
+    private boolean isBlocking;
     private Scanner scanner = new Scanner(System.in);
 
     public Combat(Player player, Monster monster) {
         this.player = player;
         this.monster = monster;
-        this.isPlayerTurn = true; // Player starts first
+        this.isPlayerTurn = true;
+        this.isBlocking = false;
         startBattle();
     }
 
-    /** Main turn-based combat loop **/
+    /** Main combat loop **/
     private void startBattle() {
         System.out.println("A battle begins between " + player.getName() + " and " + monster.getName() + "!");
 
@@ -27,13 +29,13 @@ public class Combat {
             } else {
                 monsterTurn();
             }
-            isPlayerTurn = !isPlayerTurn; // Toggle turn
+            isPlayerTurn = !isPlayerTurn;
         }
 
         endBattle();
     }
 
-    /** Handles player's turn **/
+    /** Player's turn **/
     private void playerTurn() {
         System.out.println("\nChoose action: [1] Attack  [2] Block  [3] Flee");
         int choice = scanner.nextInt();
@@ -42,8 +44,12 @@ public class Combat {
             case 1 -> {
                 System.out.println(player.getName() + " attacks!");
                 player.attack(monster);
+                isBlocking = false;
             }
-            case 2 -> System.out.println(player.getName() + " blocks!");
+            case 2 -> {
+                System.out.println(player.getName() + " braces for impact!");
+                isBlocking = true;
+            }
             case 3 -> {
                 System.out.println(player.getName() + " flees the battle!");
                 return;
@@ -52,23 +58,30 @@ public class Combat {
         }
     }
 
-
-    /** Handles monster's turn **/
+    /** Monster's turn with AI behavior **/
     private void monsterTurn() {
-        int damage = monster.getDifficulty().equalsIgnoreCase("Hard") ? 80 : 30; // Hard monsters hit harder
-        System.out.println(monster.getName() + " attacks!");
-        player.takeDamage(damage);
+        int action = (int) (Math.random() * 3);
+        switch (action) {
+            case 0 -> {
+                int baseDamage = monster.getAttackPower();
+                int finalDamage = isBlocking ? baseDamage / 2 : baseDamage;
+                System.out.println(monster.getName() + " attacks!");
+                player.takeDamage(finalDamage);
+            }
+            case 1 -> System.out.println(monster.getName() + " growls menacingly, preparing a stronger attack!");
+            case 2 -> System.out.println(monster.getName() + " hesitates, watching its opponent closely.");
+        }
+        isBlocking = false;
     }
 
-    /** Process battle outcome **/
     private void endBattle() {
         if (player.getHealth() <= 0) {
             System.out.println(player.getName() + " has been defeated!");
-            player.respawn(); // Respawn player
+            player.respawn();
         } else if (monster.getHealth() <= 0) {
             System.out.println(monster.getName() + " was vanquished!");
-            monster.die(); // Remove monster from database
-            player.savePlayerState(); // Persist battle progress
+            monster.die();
+            player.savePlayerState();
         }
     }
 }
