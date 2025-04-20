@@ -23,7 +23,6 @@ public class Main {
 
             if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
             || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
-               // player.move(action);
                 currentRoom = Navigation.navigate(action, currentRoom);
             } else if (action.equals("drop")) {
 
