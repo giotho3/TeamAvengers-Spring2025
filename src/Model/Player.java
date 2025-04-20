@@ -10,14 +10,8 @@ public class Player extends Character {
     int damage;
     int armor;
     private List<Item> inventory;
-    private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
+    public final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
-
-    public Player (int health, int attackPower, int startRoom) {
-        super(health, attackPower);
-        this.currentRoom = startRoom;
-        this.inventory = new ArrayList<>();
-    }
 
 
     /** Getters for external use **/
@@ -39,29 +33,25 @@ public class Player extends Character {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    public Player(int id, String name, int health, int attackPower, int startRoom) {
+        super(id, name, health, attackPower);
+        this.currentRoom = startRoom;
+        this.inventory = new ArrayList<>();
+    }
+
     /** Convert inventory to a storable format (comma-separated values) **/
     private String inventoryToString() {
         return inventory.isEmpty() ? "" : String.join(",", inventory.stream().map(Item::getName).toList());
     }
 
     /** Parse stored inventory string **/
-    private List<Item> parseInventory(String inventoryData) {
-        List<Item> parsedInventory = new ArrayList<>();
 
-        if (inventoryData == null || inventoryData.isBlank()) return parsedInventory;
-
-        String[] itemNames = inventoryData.split(",");
-        for (String itemName : itemNames) {
-            parsedInventory.add(new ConcreteItem(itemName.trim())); // Assuming `Item` has a constructor taking a name
-        }
-        return parsedInventory;
-    }
 
     /** Save player state **/
     public void saveGame() {
         String query = """
                 INSERT INTO PlayerState (player_id, current_room, inventory) 
-                VALUES (?, ?, ?, ?) 
+                VALUES (?, ?, ?) 
                 ON CONFLICT(player_id) DO UPDATE 
                 SET current_room=?, inventory=?""";
 
