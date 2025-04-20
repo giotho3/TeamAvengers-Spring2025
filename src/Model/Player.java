@@ -151,15 +151,15 @@ public class Player extends Character {
     public void useItem(Item item) {
         switch (item.getType()) {
             case "Armor" -> {
-                health += item.getEffectValue();
+                health += item.getFeatures();
                 System.out.println("Equipped " + item.getName() + ".");
             }
             case "Weapons" -> {
-                attackPower += item.getEffectValue();
+                attackPower += item.getFeatures();
                 System.out.println("Wielded " + item.getName() + ".");
             }
             case "Potions" -> {
-                health += item.getEffectValue();
+                health += item.getFeatures();
                 inventory.remove(item); // Potions are consumables
             }
             default -> System.out.println("Used " + item.getName() + ".");
