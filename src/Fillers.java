@@ -53,7 +53,8 @@ public class Fillers {
                 int id = rs.getInt("item_id");
                 String name = rs.getString("item_name");
                 String type = rs.getString("item_type");
-                String features = rs.getString("item_features");
+                String[] feat = rs.getString("item_features").split(" ", 2);
+                int features = Integer.parseInt(feat[0].trim());
                 String description = rs.getString("item_desc");
                 int location = rs.getInt("item_location");
 
