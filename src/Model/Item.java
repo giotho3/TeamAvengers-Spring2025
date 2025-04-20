@@ -38,7 +38,7 @@ public abstract class Item {
         return features;
     }
 
-    public String getType() {return this.type}
+    public String getType() {return this.type;}
 
     abstract void applyFeature(Player player);
 
