@@ -13,6 +13,12 @@ public class Player extends Character {
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
 
+    public Player (int health, int attackPower, int startRoom) {
+        super(health, attackPower);
+        this.currentRoom = startRoom;
+        this.inventory = new ArrayList<>();
+    }
+
 
     /** Getters for external use **/
     public int getCurrentRoom() { return currentRoom; }
@@ -32,11 +38,6 @@ public class Player extends Character {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-    public Player(int id, String name, int health, int attackPower, int startRoom) {
-        super(id, name, health, attackPower);
-        this.currentRoom = startRoom;
-        this.inventory = new ArrayList<>();
-    }
 
     /** Convert inventory to a storable format (comma-separated values) **/
     private String inventoryToString() {
