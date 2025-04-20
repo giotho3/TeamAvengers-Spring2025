@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 public class Player extends Character {
     private int currentRoom;
+    int damage;
     private List<Item> inventory;
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
@@ -30,7 +31,7 @@ public class Player extends Character {
 
         String[] itemNames = inventoryData.split(",");
         for (String itemName : itemNames) {
-            parsedInventory.add(new Item(itemName.trim())); // Assuming `Item` has a constructor taking a name
+            parsedInventory.add(new ConcreteItem(itemName.trim())); // Assuming `Item` has a constructor taking a name
         }
         return parsedInventory;
     }
@@ -161,4 +162,8 @@ public class Player extends Character {
     /** Getters for external use **/
     public int getCurrentRoom() { return currentRoom; }
     public List<Item> getInventory() { return inventory; }
+
+    public void setDamage() {
+        this.damage = damage;
+    }
 }
