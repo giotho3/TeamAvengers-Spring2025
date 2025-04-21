@@ -15,7 +15,7 @@ public class Navigation {
                 }
                 currentRoom.setVisited(true);
                 if (currentRoom.getExits().containsKey(action.toUpperCase())) {
-                    if (currentRoom.getExits().get(action) != 0) {
+                    if (currentRoom.getExits().get(action.toUpperCase()) != 0) {
                         roomNum = currentRoom.getExits().get(action);
                     } else {
                         System.out.println("You can't go that way");
