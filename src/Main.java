@@ -1,3 +1,4 @@
+import Controller.PuzzleManager;
 import Model.Player;
 import Model.Room;
 import View.HelpMenu;
@@ -13,10 +14,11 @@ public class Main {
 
         System.out.println(util.askForName());
         Scanner input = new Scanner(System.in);
-        String action = input.next();
-        int currentRoom = 1;
+        String action;
+        Room currentRoom = Fillers.getRoomById(1);
 
-        Player player = new Player(action, 50, 10, currentRoom);
+        assert currentRoom != null;
+        Player player = new Player(50, 10, currentRoom.getRoomID());
 
         while(gameRunning) {
             action = input.nextLine();
@@ -24,9 +26,9 @@ public class Main {
             if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
             || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
                 player.move(action);
-                currentRoom = Navigation.navigate(action, currentRoom);
+                currentRoom = Navigation.navigate(action, currentRoom.getRoomID());
             } else if (action.equals("look around")) {
-
+                System.out.println(currentRoom.getRoomDesc());
             } else if (action.equals("save")) {
 
             } else if (action.equals("fight")) {
@@ -39,15 +41,23 @@ public class Main {
                 player.useItem(reqItem[1]); //wear cape
 
             } else if (action.equals("interact")) {
+                PuzzleManager pm =  new PuzzleManager();
+                String userAnswer = input.next();
+                pm.attemptPuzzle(currentRoom.getRoomID(), userAnswer);
                 //hint goes in here after 3 attempts
             } else if (action.equals("load game")) {
+                player.loadGame();
                 //cancel or confirm for overwrite protection
             } else if (action.equals("help")) {
                     //open help menu. options include navigation, puzzle
                     //combat, items, story, save. exit will exit the menu
                 System.out.println("Entering help menu");
                 HelpMenu helpMenu = new HelpMenu();
-                helpMenu.displayHelp(input.nextLine());
+                String userHelp = input.nextLine();
+                while (!userHelp.equalsIgnoreCase("exit")) {
+                    helpMenu.displayHelp(userHelp);
+                }
+                helpMenu.exitHelpMenu();
             } else if (action.equals("quit")){
                 gameRunning = util.quit(input);
             } else {

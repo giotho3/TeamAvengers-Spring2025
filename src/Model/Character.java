@@ -15,6 +15,13 @@ public abstract class Character {
     private static final Logger LOGGER = Logger.getLogger(Character.class.getName());
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
+    public Character(int health, int attack) {
+        this.health = health;
+        this.attackPower = attack;
+
+
+    }
+
     public Character(int id, String name, int health, int attackPower) {
         this.id = id;
         this.name = name;

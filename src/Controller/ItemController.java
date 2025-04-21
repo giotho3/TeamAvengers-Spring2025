@@ -31,20 +31,6 @@ public class ItemController {
         itemView.displayPickupMessage(item);
     }
 
-    public void removeFromInventory(Item item) {
-        inventory.remove(item);
-    }
-
-    public void useItem(Item item) {
-        if (inventory.contains(item)) {
-            item.applyFeature(player);
-            removeFromInventory(item);
-            itemView.displayUseItemResult(item, true);
-        } else {
-            itemView.displayUseItemResult(item, false);
-        }
-    }
-
     public void showInventory() {
         itemView.displayInventory(inventory);
     }

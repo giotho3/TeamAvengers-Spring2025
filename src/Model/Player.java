@@ -33,8 +33,8 @@ public class Player extends Character {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public Player(int id, String name, int health, int attackPower, int startRoom) {
-        super(id, name, health, attackPower);
+    public Player(int health, int attackPower, int startRoom) {
+        super(health, attackPower);
         this.currentRoom = startRoom;
         this.inventory = new ArrayList<>();
     }
