@@ -13,6 +13,11 @@ public class Player extends Character {
     public final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
 
+    public Player(int health, int attackPower, int startRoom) {
+        super(health, attackPower);
+        this.currentRoom = startRoom;
+        this.inventory = new ArrayList<>();
+    }
 
     /** Getters for external use **/
     public int getCurrentRoom() { return currentRoom; }
@@ -33,19 +38,26 @@ public class Player extends Character {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public Player(int id, String name, int health, int attackPower, int startRoom) {
-        super(id, name, health, attackPower);
-        this.currentRoom = startRoom;
-        this.inventory = new ArrayList<>();
-    }
-
     /** Convert inventory to a storable format (comma-separated values) **/
     private String inventoryToString() {
         return inventory.isEmpty() ? "" : String.join(",", inventory.stream().map(Item::getName).toList());
     }
 
     /** Parse stored inventory string **/
+    private List<Item> parseInventory(String inventoryData) {
+        List<Item> parsedInventory = new ArrayList<>();
 
+        if (inventoryData == null || inventoryData.isBlank()) return parsedInventory;
+
+        String[] itemNames = inventoryData.split(",");
+        for (String name : itemNames) {
+            Item item = ItemFactory.createItem(name.trim()); // Use factory method for item creation
+            if (item != null) {
+                parsedInventory.add(item);
+            }
+        }
+        return parsedInventory;
+    }
 
     /** Save player state **/
     public void saveGame() {
