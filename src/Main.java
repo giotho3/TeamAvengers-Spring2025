@@ -96,12 +96,10 @@ public class Main {
         System.out.println("\n🔹 " + room.getRoomName());
         System.out.println(room.getRoomDesc());
 
-        List<Item> items = Collections.singletonList(Fillers.getItemFromID(room.getRoomID()));
-        if (!items.isEmpty()) {
+        Item item = Fillers.getItemFromID(room.getRoomID());
+        if (item != null) {
             System.out.println("\n🛠️ Items available:");
-            for (Item item : items) {
-                System.out.println("- " + item.getName() + ": " + item.getDesc());
-            }
+            System.out.println("- " + item.getName() + ": " + item.getDesc());
         } else {
             System.out.println("\n⚠️ There are no items in this room.");
         }
