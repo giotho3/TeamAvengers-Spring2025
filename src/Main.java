@@ -30,7 +30,7 @@ public class Main {
                     action.equalsIgnoreCase("W") || action.equalsIgnoreCase("NE") || action.equalsIgnoreCase("NW") ||
                     action.equalsIgnoreCase("SW") || action.equalsIgnoreCase("SE")) {
                 assert currentRoom != null;
-                roomNum = Navigation.navigate(action, currentRoom.getRoomID());
+                roomNum = Navigation.navigate(action.toUpperCase(), currentRoom.getRoomID());
                 currentRoom = Fillers.getRoomById(roomNum);
             } else if (action.equals("look around")) {
                 assert currentRoom != null;
