@@ -1,5 +1,6 @@
 import Controller.Combat;
 import Controller.PuzzleManager;
+import Model.Monster;
 import Model.Player;
 import Model.Room;
 import View.HelpMenu;
@@ -36,15 +37,14 @@ public class Main {
             } else if (action.equals("save")) {
                 player.saveGame();
             } else if (action.equals("fight")) {
-                //Combat combat = new Combat(player, currentRoom.get);
-                //attack and flee methods go in here
+                Combat combat = new Combat(player, Fillers.getMonsterFromID(roomNum));
             } else if (action.equals("grimoire")) {
-                //System.out.println(player.inventoryToString());
+                System.out.println(player.inventoryToString());
                 //displays entire inventory, "-apparel", "-weapons", "-spells", "-potions"
             } else if (action.contains("wear") || action.contains("conjure")
                     || action.contains("drink") || action.contains("equip")) {
                 String[] reqItem = action.split(" ");
-                player.useItem(reqItem[1]); //wear cape
+                player.useItem(reqItem[1]);
 
             } else if (action.equals("interact")) {
                 PuzzleManager pm =  new PuzzleManager();

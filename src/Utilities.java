@@ -23,10 +23,6 @@ public class Utilities
         return "Thanks for playing!";
     }
 
-    public String askForName() {
-        return "What is your name?";
-    }
-
     public boolean quit(Scanner input) {
         String confirmation;
         while (true) {

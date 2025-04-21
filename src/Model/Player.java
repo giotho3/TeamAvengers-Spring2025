@@ -39,8 +39,8 @@ public class Player extends Character {
     public void setName(String name) { this.name = name; }
 
     /** Convert inventory to a storable format (comma-separated values) **/
-    private String inventoryToString() {
-        return inventory.isEmpty() ? "" : String.join(",", inventory.stream().map(Item::getName).toList());
+    public String inventoryToString() {
+        return inventory.isEmpty() ? "Your inventory is empty." : String.join(",", inventory.stream().map(Item::getName).toList());
     }
 
     /** Parse stored inventory string **/
