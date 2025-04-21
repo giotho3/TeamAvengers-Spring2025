@@ -6,7 +6,7 @@ public class Navigation {
         Room currentRoom;
 
         try {
-                currentRoom = Fillers.getRoomById(roomNum + 1);
+                currentRoom = Fillers.getRoomById(roomNum);
             assert currentRoom != null; //telling the compiler that it's impossible for currentRoom to be null
             System.out.println("Current room: " + currentRoom.getRoomID() +
                         ": " + currentRoom.getRoomName());
