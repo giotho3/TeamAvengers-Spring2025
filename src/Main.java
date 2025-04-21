@@ -21,11 +21,13 @@ public class Main {
         Player player = new Player(50, 10, roomNum);
 
         while(gameRunning) {
-            System.out.println("Type 'Help' for help");
+            System.out.println("What would you like to do?");
+            System.out.println("Type \"help\" for help");
             action = input.nextLine();
 
-            if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
-            || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
+            if(action.equalsIgnoreCase("N") || action.equalsIgnoreCase("S") || action.equalsIgnoreCase("E") ||
+                    action.equalsIgnoreCase("W") || action.equalsIgnoreCase("NE") || action.equalsIgnoreCase("NW") ||
+                    action.equalsIgnoreCase("SW") || action.equalsIgnoreCase("SE")) {
                 player.move(action);
                 assert currentRoom != null;
                 roomNum = Navigation.navigate(action, currentRoom.getRoomID());
