@@ -66,12 +66,12 @@ public class Fillers {
         return null;
     }
 
-    public static Model.Monster getMonsterFromID(int monsterID) {
+    public static Model.Monster getMonsterFromID(int roomID) {
         String query = "SELECT * FROM MONSTERS WHERE monster_id = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setInt(1, monsterID);
+            pstmt.setInt(1, roomID);
             ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()) {
