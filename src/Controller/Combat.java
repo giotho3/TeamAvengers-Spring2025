@@ -51,8 +51,8 @@ public class Combat {
                 isBlocking = true;
             }
             case 3 -> {
-                System.out.println(player.getName() + " flees the battle!");
-                break;
+                System.out.println("You flee the battle!");
+                return;
             }
             default -> System.out.println("Invalid choice.");
         }
