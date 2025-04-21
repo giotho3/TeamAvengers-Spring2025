@@ -16,7 +16,8 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String action;
         Room currentRoom = Fillers.getRoomById(1);
-        int roomNum = currentRoom.getRoomID();
+        assert currentRoom != null;
+        int roomNum = currentRoom.setRoomID(1);
         Player player = new Player(50, 10, roomNum);
 
         while(gameRunning) {

@@ -28,8 +28,9 @@ public class Room {
         return roomID;
     }
 
-    public void setRoomID(int roomID) {
+    public int setRoomID(int roomID) {
         this.roomID = roomID;
+        return roomID;
     }
 
     public String getRoomName() {
