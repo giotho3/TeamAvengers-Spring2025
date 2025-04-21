@@ -117,31 +117,6 @@ public class Player extends Character {
         return false;
     }
 
-    /** Movement system **/
-    public void move(String direction) {
-        String query = "SELECT " + direction + "_exit FROM Rooms WHERE room_id = ?";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, currentRoom);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                int nextRoomID = rs.getInt(1);
-                if (nextRoomID != 0) {
-                    currentRoom = nextRoomID;
-                    saveGame();
-                    System.out.println("Moved to room: " + currentRoom);
-                } else {
-                    System.out.println("Cannot move " + direction + ". The exit is locked.");
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.severe("Error moving player: " + e.getMessage());
-        }
-    }
-
     /** Respawn player **/
     public void respawn() {
         currentRoom = 0;

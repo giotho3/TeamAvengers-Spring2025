@@ -28,7 +28,6 @@ public class Main {
             if(action.equalsIgnoreCase("N") || action.equalsIgnoreCase("S") || action.equalsIgnoreCase("E") ||
                     action.equalsIgnoreCase("W") || action.equalsIgnoreCase("NE") || action.equalsIgnoreCase("NW") ||
                     action.equalsIgnoreCase("SW") || action.equalsIgnoreCase("SE")) {
-                player.move(action);
                 assert currentRoom != null;
                 roomNum = Navigation.navigate(action, currentRoom.getRoomID());
                 currentRoom = Fillers.getRoomById(roomNum);
