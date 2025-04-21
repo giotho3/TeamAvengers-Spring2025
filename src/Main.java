@@ -32,7 +32,7 @@ public class Main {
         Monster monster = Fillers.getMonsterFromID(currentRoom.getRoomID());
         if (monster != null) {
             System.out.println("\n⚔️ A wild " + monster.getName() + " appears!");
-            new Combat(player, monster);
+            // new Combat(player, monster);
         }
 
         while (gameRunning) {
