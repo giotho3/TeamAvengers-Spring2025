@@ -8,11 +8,12 @@ import View.HelpMenu;
 
 import java.util.Scanner;
 
-/**Class: Main
+/**
+ * Class: Main
  * Giovanni Thomas
  * Course: ITEC 3860 Spring 2025
  * Written: April 20, 2025.
- * The Main class is responsible for calling the necessary methods for user input
+ * The Main class is responsible for calling the necessary methods for user input.
  */
 
 public class Main {
@@ -37,6 +38,7 @@ public class Main {
             System.out.println("\n⚔️ A wild " + monster.getName() + " appears!");
             activeCombat = true;
             new Combat(player, monster);
+            activeCombat = false; // Reset combat flag after battle
         }
 
         while (gameRunning) {
@@ -45,24 +47,28 @@ public class Main {
             String action = input.nextLine();
 
             if (isDirection(action)) {
-                startingRoom = Navigation.navigate(action, currentRoom.getRoomID());
-                currentRoom = Fillers.getRoomById(startingRoom);
+                currentRoom = Fillers.getRoomById(Navigation.navigate(action, currentRoom.getRoomID()));
                 checkRoomContent(player, currentRoom, puzzleManager, input);
 
             } else if (action.equals("look around")) {
                 System.out.println(currentRoom.getRoomDesc());
+
             } else if (action.equals("save")) {
                 player.saveGame();
+
             } else if (action.equals("fight") && !activeCombat) {
-                monster = Fillers.getMonsterFromID(startingRoom);
+                monster = Fillers.getMonsterFromID(currentRoom.getRoomID());
                 if (monster != null) {
                     activeCombat = true; // Combat now active
                     new Combat(player, monster);
+                    activeCombat = false; // Reset after battle
                 } else {
                     System.out.println("There are no monsters here.");
                 }
+
             } else if (action.equals("grimoire")) {
                 System.out.println(player.inventoryToString());
+
             } else if (action.startsWith("pick up ")) {
                 String itemName = action.substring(8).trim();
                 Item item = Fillers.getItemFromName(itemName);
@@ -71,27 +77,41 @@ public class Main {
                 } else {
                     System.out.println("That item doesn't exist.");
                 }
-            } else if (action.contains("wear") || action.contains("conjure")
-                    || action.contains("drink") || action.contains("equip")) {
+
+            } else if (action.contains("wear") || action.contains("conjure") || action.contains("drink") || action.contains("equip")) {
                 String[] reqItem = action.split(" ");
-                player.useItem(reqItem[1]);
+                if (reqItem.length > 1) {
+                    player.useItem(reqItem[1]);
+                } else {
+                    System.out.println("Specify an item to use.");
+                }
 
             } else if (action.equals("interact")) {
-                System.out.println("Solve the puzzle:");
-                String userAnswer = input.nextLine();
-                puzzleManager.attemptPuzzle(currentRoom.getRoomID(), userAnswer);
+                if (puzzleManager.hasPuzzle(currentRoom.getRoomID())) {
+                    System.out.println("\n🤔 You found a puzzle! Here’s the challenge:");
+                    System.out.println(puzzleManager.getPuzzleRiddle(currentRoom.getRoomID())); // Ensure riddle displays
+                    String userAnswer = input.nextLine();
+                    puzzleManager.attemptPuzzle(currentRoom.getRoomID(), userAnswer);
+                } else {
+                    System.out.println("There is no puzzle in this room.");
+                }
+
             } else if (action.equals("load game")) {
                 player.loadGame();
+
             } else if (action.equals("help")) {
                 showHelpMenu(input);
+
             } else if (action.equals("quit")) {
                 gameRunning = util.quit(input);
+
             } else {
                 System.out.println("Invalid Command Entered. Type 'help' for help");
             }
         }
 
         System.out.println(util.endMessage());
+        input.close(); // Ensuring Scanner closure to prevent resource leak
     }
 
     private static void checkRoomContent(Player player, Room room, PuzzleManager puzzleManager, Scanner input) {
@@ -109,7 +129,8 @@ public class Main {
         }
 
         if (puzzleManager.hasPuzzle(room.getRoomID())) {
-            System.out.println("\n🤔 You found a puzzle! Try solving it:");
+            System.out.println("\n🤔 You found a puzzle! Here’s the challenge:");
+            System.out.println(puzzleManager.getPuzzleRiddle(room.getRoomID())); // Ensure riddle displays
             String userAnswer = input.nextLine();
             puzzleManager.attemptPuzzle(room.getRoomID(), userAnswer);
         }
@@ -119,6 +140,7 @@ public class Main {
             System.out.println("\n⚔️ A wild " + monster.getName() + " appears!");
             activeCombat = true;
             new Combat(player, monster);
+            activeCombat = false; // Reset combat flag after battle
         }
     }
 

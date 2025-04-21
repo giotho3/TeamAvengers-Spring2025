@@ -3,16 +3,16 @@ package Model;
 public class Puzzle {
     private String description;
     private String solution;
-    private String hint;
-    private boolean isSolved;
+    private String puzzleRiddle; // Fixed riddle storage
     private String reward;
     private String location;
+    private boolean isSolved;
     private int failedAttempts;
 
-    public Puzzle(String description, String solution, String hint, String reward, String location) {
+    public Puzzle(String description, String solution, String riddle, String reward, String location) {
         this.description = description;
         this.solution = solution;
-        this.hint = hint;
+        this.puzzleRiddle = riddle; // Correctly store riddle from database
         this.reward = reward;
         this.location = location;
         this.isSolved = false;
@@ -42,7 +42,7 @@ public class Puzzle {
             System.out.println("Incorrect answer. Try again.");
 
             if (failedAttempts >= 3) {
-                System.out.println("Hint: " + hint);
+                System.out.println("Hint: " + puzzleRiddle); // Show riddle as hint if struggling
             }
 
             return false;
@@ -52,14 +52,14 @@ public class Puzzle {
     /** Request a hint dynamically **/
     public void requestHint() {
         if (failedAttempts >= 3) {
-            System.out.println("Hint: " + hint);
+            System.out.println("Hint: " + puzzleRiddle);
         } else {
             System.out.println("Keep trying! More hints become available after multiple incorrect attempts.");
         }
     }
 
-    /** Getters for encapsulated access **/
-    public String getDescription() { return description; }
+    /** Getters **/
+    public String getRiddle() { return puzzleRiddle; }
     public String getReward() { return reward; }
     public boolean isSolved() { return isSolved; }
 }

@@ -3,7 +3,6 @@ package Model;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -26,31 +25,6 @@ public class Monster extends Character {
     public String getType() { return type; }
     public String getDescription() { return description; }
     public String getDifficulty() { return difficulty; }
-
-    /** Dynamically load a monster when entering a room **/
-    public static Monster loadMonster(int roomNumber) {
-        String query = "SELECT * FROM Monsters WHERE room_number = ?";
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setInt(1, roomNumber);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return new Monster(
-                        rs.getInt("monster_id"),
-                        rs.getString("monster_name"),
-                        rs.getString("monster_type"),
-                        rs.getString("monster_difficulty"),
-                        rs.getString("monster_description"),
-                        rs.getInt("room_number")
-                );
-            }
-        } catch (SQLException e) {
-            LOGGER.severe("Error loading monster from room " + roomNumber + ": " + e.getMessage());
-        }
-        return null;
-    }
 
     /** Adjust health based on difficulty **/
     private static int adjustHealthBasedOnDifficulty(String difficulty) {
