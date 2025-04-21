@@ -24,8 +24,7 @@ public class Main {
             System.out.println("Type 'Help' for help");
             action = input.nextLine();
 
-            if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
-            || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
+            if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")) {
                 player.move(action);
                 assert currentRoom != null;
                 roomNum = Navigation.navigate(action, currentRoom.getRoomID());
