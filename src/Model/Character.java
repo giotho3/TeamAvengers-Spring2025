@@ -48,7 +48,7 @@ public abstract class Character {
     private void updateHealthInDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             conn.setAutoCommit(false);
-            try (PreparedStatement stmt = conn.prepareStatement("UPDATE PlayerState SET health_points = ? WHERE id = ?")) {
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE PlayerState SET player_health = ? WHERE player_id = ?")) {
                 stmt.setInt(1, health);
                 stmt.setInt(2, id);
                 stmt.executeUpdate();

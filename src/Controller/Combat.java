@@ -21,7 +21,7 @@ public class Combat {
 
     /** Main combat loop **/
     private void startBattle() {
-        System.out.println("A battle begins between " + player.getName() + " and " + monster.getName() + "!");
+        System.out.println("A battle begins between  you and " + monster.getName() + "!");
 
         while (player.getHealth() > 0 && monster.getHealth() > 0) {
             if (isPlayerTurn) {
@@ -42,7 +42,7 @@ public class Combat {
 
         switch (choice) {
             case 1 -> {
-                System.out.println(player.getName() + " attacks!");
+                System.out.println("You attack!");
                 player.attack(monster);
                 isBlocking = false;
             }
@@ -52,7 +52,7 @@ public class Combat {
             }
             case 3 -> {
                 System.out.println(player.getName() + " flees the battle!");
-                return;
+                break;
             }
             default -> System.out.println("Invalid choice.");
         }
