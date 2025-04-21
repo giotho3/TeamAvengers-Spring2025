@@ -81,7 +81,7 @@ public class Combat {
         } else if (monster.getHealth() <= 0) {
             System.out.println(monster.getName() + " was vanquished!");
             monster.die();
-            player.savePlayerState();
+            player.saveGame();
         }
     }
 }

@@ -16,7 +16,6 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String action;
         Room currentRoom = Fillers.getRoomById(1);
-        assert currentRoom != null;
         int roomNum = currentRoom.getRoomID();
         Player player = new Player(50, 10, roomNum);
 
@@ -32,10 +31,11 @@ public class Main {
             } else if (action.equals("look around")) {
                 System.out.println(currentRoom.getRoomDesc());
             } else if (action.equals("save")) {
-
+                player.saveGame();
             } else if (action.equals("fight")) {
                 //attack and flee methods go in here
             } else if (action.equals("grimoire")) {
+                
                 //displays entire inventory, "-apparel", "-weapons", "-spells", "-potions"
             } else if (action.contains("wear") || action.contains("conjure")
                     || action.contains("drink") || action.contains("equip")) {
