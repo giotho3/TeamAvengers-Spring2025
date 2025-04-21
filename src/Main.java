@@ -33,6 +33,7 @@ public class Main {
                 roomNum = Navigation.navigate(action, currentRoom.getRoomID());
                 currentRoom = Fillers.getRoomById(roomNum);
             } else if (action.equals("look around")) {
+                assert currentRoom != null;
                 System.out.println(currentRoom.getRoomDesc());
             } else if (action.equals("save")) {
                 player.saveGame();
@@ -49,6 +50,7 @@ public class Main {
             } else if (action.equals("interact")) {
                 PuzzleManager pm =  new PuzzleManager();
                 String userAnswer = input.next();
+                assert currentRoom != null;
                 pm.attemptPuzzle(currentRoom.getRoomID(), userAnswer);
                 //hint goes in here after 3 attempts
             } else if (action.equals("load game")) {
