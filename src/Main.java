@@ -10,6 +10,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+/**Class: Main
+ * Giovanni Thomas
+ * Course: ITEC 3860 Spring 2025
+ * Written: April 20, 2025.
+ * The Main class is responsible for calling the necessary methods for user input
+ */
+
 public class Main {
 
     public static void main(String[] args) {
