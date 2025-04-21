@@ -1,3 +1,4 @@
+import Controller.Combat;
 import Controller.PuzzleManager;
 import Model.Player;
 import Model.Room;
@@ -12,7 +13,6 @@ public class Main {
         Utilities util = new Utilities();
         System.out.println(util.startMessage());
 
-        System.out.println(util.askForName());
         Scanner input = new Scanner(System.in);
         String action;
         Room currentRoom = Fillers.getRoomById(1);
@@ -21,6 +21,7 @@ public class Main {
         Player player = new Player(50, 10, roomNum);
 
         while(gameRunning) {
+            System.out.println("Type 'Help' for help");
             action = input.nextLine();
 
             if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
@@ -34,9 +35,10 @@ public class Main {
             } else if (action.equals("save")) {
                 player.saveGame();
             } else if (action.equals("fight")) {
+                //Combat combat = new Combat(player, currentRoom.get);
                 //attack and flee methods go in here
             } else if (action.equals("grimoire")) {
-                
+                //System.out.println(player.inventoryToString());
                 //displays entire inventory, "-apparel", "-weapons", "-spells", "-potions"
             } else if (action.contains("wear") || action.contains("conjure")
                     || action.contains("drink") || action.contains("equip")) {
@@ -56,9 +58,11 @@ public class Main {
                     //combat, items, story, save. exit will exit the menu
                 System.out.println("Entering help menu");
                 HelpMenu helpMenu = new HelpMenu();
-                String userHelp = input.nextLine();
+
+                String userHelp = "";
                 while (!userHelp.equalsIgnoreCase("exit")) {
                     helpMenu.displayHelp(userHelp);
+                    userHelp = input.nextLine();
                 }
                 helpMenu.exitHelpMenu();
             } else if (action.equals("quit")){
