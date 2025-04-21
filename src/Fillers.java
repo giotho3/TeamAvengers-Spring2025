@@ -41,12 +41,12 @@ public class Fillers {
         return null;
     }
 
-    public static Model.Item getItemFromID(int itemId) {
+    public static Model.Item getItemFromID(int roomId) {
         String query = "SELECT * FROM ITEMS WHERE item_id = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt.setInt(1, itemId);
+            pstmt.setInt(1, roomId);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
