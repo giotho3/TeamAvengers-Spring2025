@@ -70,17 +70,25 @@ public class Monster extends Character {
     }
 
     /** Removes monster from the database after defeat **/
+    /** Marks monster as removed by setting its room_number to 0 **/
     private void removeMonsterFromDatabase() {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             conn.setAutoCommit(false);
-            try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Monsters WHERE room_number = ?")) {
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE Monsters SET room_number = 0 WHERE room_number = ?")) {
                 stmt.setInt(1, roomNumber);
-                stmt.executeUpdate();
+                int affectedRows = stmt.executeUpdate();
                 conn.commit();
-                System.out.println(getName() + " removed from room " + roomNumber);
+
+                if (affectedRows > 0) {
+                    System.out.println(getName() + " has been removed from room " + roomNumber);
+                } else {
+                    System.out.println("No monster found in room " + roomNumber);
+                }
+
+
             } catch (SQLException e) {
                 conn.rollback();
-                LOGGER.severe("Failed to remove monster: " + e.getMessage());
+                LOGGER.severe("Failed to update monster: " + e.getMessage());
             }
         } catch (SQLException e) {
             LOGGER.severe("Database connection error: " + e.getMessage());
