@@ -16,9 +16,9 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String action;
         Room currentRoom = Fillers.getRoomById(1);
-
         assert currentRoom != null;
-        Player player = new Player(50, 10, currentRoom.getRoomID());
+        int roomNum = currentRoom.getRoomID();
+        Player player = new Player(50, 10, roomNum);
 
         while(gameRunning) {
             action = input.nextLine();
@@ -26,7 +26,9 @@ public class Main {
             if(action.equals("N") || action.equals("S") || action.equals("E") || action.equals("W")
             || action.equals("NE") || action.equals("NW") || action.equals("SW") || action.equals("SE")) {
                 player.move(action);
-                currentRoom = Navigation.navigate(action, currentRoom);
+                assert currentRoom != null;
+                roomNum = Navigation.navigate(action, currentRoom.getRoomID());
+                currentRoom = Fillers.getRoomById(roomNum);
             } else if (action.equals("look around")) {
                 System.out.println(currentRoom.getRoomDesc());
             } else if (action.equals("save")) {
