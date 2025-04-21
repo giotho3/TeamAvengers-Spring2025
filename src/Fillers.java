@@ -1,3 +1,4 @@
+import Model.Item;
 import Model.Monster;
 
 import java.sql.*;
@@ -56,12 +57,36 @@ public class Fillers {
                 String[] feat = rs.getString("item_features").split(" ", 2);
                 int features = Integer.parseInt(feat[0].trim());
                 String description = rs.getString("item_desc");
-                int location = rs.getInt("item_location");
+                int location = rs.getInt("room_number");
 
                 return Model.ItemFactory.createItem(id, name, type, features, description, location);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Item getItemFromName(String itemName) {
+        String query = "SELECT * FROM ITEMS WHERE item_name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, itemName);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return Model.ItemFactory.createItem(
+                        rs.getInt("item_id"),
+                        rs.getString("item_name"),
+                        rs.getString("item_type"),
+                        rs.getInt("item_features"),
+                        rs.getString("item_desc"),
+                        rs.getInt("item_location")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching item: " + e.getMessage());
         }
         return null;
     }
