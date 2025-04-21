@@ -7,40 +7,49 @@ import java.util.logging.Logger;
 
 public class Player extends Character {
     private int currentRoom;
-    int damage;
-    int armor;
+    private int damage;
+    private int armor;
     private List<Item> inventory;
+    private List<Item> equippedItems;  // New list for equipped items
     public final String DB_URL = "jdbc:sqlite:identifier.sqlite";
     private static final Logger LOGGER = Logger.getLogger(Player.class.getName());
+    private String player;
 
     public Player(int health, int attackPower, int startRoom) {
         super(health, attackPower);
         this.currentRoom = startRoom;
         this.inventory = new ArrayList<>();
+        this.equippedItems = new ArrayList<>();
+        this.name = "You"; // Ensure default name is assigned
     }
 
     /** Getters for external use **/
+    /** Set the player's name **/
+    public void setName(String name) {
+        this.name = name != null && !name.isBlank() ? name.trim() : "Unknown"; // Prevent empty names
+    }
+    public List<Item> getInventory() { return inventory; }
+    public List<Item> getEquippedItems() { return equippedItems; }  // New getter
     public int getCurrentRoom() { return currentRoom; }
     public void setCurrentRoom(int currentRoom) { this.currentRoom = currentRoom; }
-
-    public List<Item> getInventory() { return inventory; }
-    public void setInventory(List<Item> inventory) { this.inventory = inventory; }
-
     public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = Math.max(health, 0); } // Prevents negative health
-
+    public void setHealth(int health) { this.health = Math.max(health, 0); }
     public int getAttackPower() { return attackPower; }
-    public void setAttackPower(int attackPower) { this.attackPower = Math.max(attackPower, 0); } // Prevents negative attack power
+    public void setAttackPower(int attackPower) { this.attackPower = Math.max(attackPower, 0); }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    /** Convert inventory to a storable format (comma-separated values) **/
+    /** Inventory Display Method **/
     public String inventoryToString() {
-        return inventory.isEmpty() ? "Your inventory is empty." : String.join(",", inventory.stream().map(Item::getName).toList());
+        String inv = inventory.isEmpty() ? "Your inventory is empty." : String.join(", ", inventory.stream().map(Item::getName).toList());
+        String equipped = equippedItems.isEmpty() ? "No equipped items." : String.join(", ", equippedItems.stream().map(Item::getName).toList());
+        return "Inventory: " + inv + "\nEquipped Items: " + equipped;
+    }
+    public void pickUpItem(Item item) {
+        if (item != null) {
+            inventory.add(item); // ✅ Adds item to player's inventory
+            System.out.println("✅ You picked up " + item.getName() + "!");
+        } else {
+            System.out.println("⚠️ That item doesn't exist.");
+        }
     }
 
     /** Parse stored inventory string **/
@@ -59,13 +68,38 @@ public class Player extends Character {
         return parsedInventory;
     }
 
-    /** Save player state **/
+    /** Equip an Item **/
+    public void useItem(String reqItem) {
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(reqItem)) {
+                switch (item.getType()) {
+                    case "Armor" -> {
+                        health += item.getFeatures();
+                        equippedItems.add(item);  // Move to equipped list
+                        inventory.remove(item);   // Remove from regular inventory
+                        System.out.println("Equipped " + item.getName() + ".");
+                    }
+                    case "Weapons" -> {
+                        attackPower += item.getFeatures();
+                        equippedItems.add(item);
+                        inventory.remove(item);
+                        System.out.println("Wielded " + item.getName() + ".");
+                    }
+                    default -> System.out.println("Used " + item.getName() + ".");
+                }
+                break; // Stop after equipping one item
+            }
+        }
+        saveGame();
+    }
+
+    /** Save Game **/
     public void saveGame() {
         String query = """
-                INSERT INTO PlayerState (player_id, current_room, inventory) 
-                VALUES (?, ?, ?) 
-                ON CONFLICT(player_id) DO UPDATE 
-                SET current_room=?, inventory=?""";
+        INSERT INTO PlayerState (player_id, current_room, inventory, last_save, player_damage, player_health) 
+        VALUES (?, ?, ?, ?, ?, ?) 
+        ON CONFLICT(player_id) DO UPDATE 
+        SET current_room=?, inventory=?, last_save=?, player_damage=?, player_health=?""";
 
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             conn.setAutoCommit(false);
@@ -74,10 +108,10 @@ public class Player extends Character {
                 stmt.setInt(1, this.id);
                 stmt.setInt(2, this.currentRoom);
                 stmt.setString(3, inventoryToString());
-                stmt.setInt(4, this.health);
-//                stmt.setInt(5, this.currentRoom);
-//                stmt.setString(6, inventoryToString());
-//                stmt.setInt(7, this.health);
+                stmt.setString(4, String.join(", ", equippedItems.stream().map(Item::getName).toList()));  // Store equipped items
+                stmt.setInt(5, this.currentRoom);
+                stmt.setString(6, inventoryToString());
+                stmt.setString(7, String.join(", ", equippedItems.stream().map(Item::getName).toList()));
 
                 stmt.executeUpdate();
                 conn.commit();
@@ -95,6 +129,7 @@ public class Player extends Character {
     /** Load player state **/
     public boolean loadGame() {
         String query = "SELECT * FROM PlayerState WHERE player_id = ?";
+
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -104,6 +139,7 @@ public class Player extends Character {
             if (rs.next()) {
                 this.currentRoom = rs.getInt("current_room");
                 this.inventory = parseInventory(rs.getString("inventory"));
+                this.equippedItems = parseInventory(rs.getString("equipped_items")); // Load equipped items correctly // Load equipped items separately
                 this.health = rs.getInt("health");
                 System.out.println("Game loaded at room: " + this.currentRoom);
                 return true;
@@ -115,58 +151,5 @@ public class Player extends Character {
             LOGGER.severe("Error loading player state: " + e.getMessage());
         }
         return false;
-    }
-
-    /** Respawn player **/
-    public void respawn() {
-        currentRoom = 0;
-        health = 100;
-        System.out.println("Respawning...");
-        saveGame();
-    }
-
-    /** Use an item **/
-    public void useItem(String reqItem) {
-        for (Item item : inventory) {
-            if (item.getName().equalsIgnoreCase(reqItem)) {
-                switch (item.getType()) {
-                    case "Armor" -> {
-                        health += item.getFeatures();
-                        System.out.println("Equipped " + item.getName() + ".");
-                    }
-                    case "Weapons" -> {
-                        attackPower += item.getFeatures();
-                        System.out.println("Wielded " + item.getName() + ".");
-                    }
-                    case "Potions" -> {
-                        health += item.getFeatures();
-                        inventory.remove(item); // Potions are consumables
-                    }
-                    default -> System.out.println("Used " + item.getName() + ".");
-                }
-            }
-        }
-        saveGame();
-    }
-
-    /** Pick up an item **/
-    public void pickUpItem(Item item) {
-        if (item == null) {
-            System.out.println("No valid item selected.");
-            return;
-        }
-
-        inventory.add(item);
-        System.out.println("Picked up " + item.getName() + ".");
-        saveGame();
-    }
-
-
-
-    public void setDamage() {
-        this.damage = damage;
-    }
-    public void setArmor() {
-        this.armor = armor;
     }
 }
