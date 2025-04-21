@@ -8,6 +8,13 @@ import View.HelpMenu;
 
 import java.util.Scanner;
 
+/**Class: Main
+ * Giovanni Thomas
+ * Course: ITEC 3860 Spring 2025
+ * Written: April 20, 2025.
+ * The Main class is responsible for calling the necessary methods for user input
+ */
+
 public class Main {
 
     private static boolean activeCombat = false; // Prevent duplicate combat triggers

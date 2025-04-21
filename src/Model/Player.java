@@ -75,9 +75,9 @@ public class Player extends Character {
                 stmt.setInt(2, this.currentRoom);
                 stmt.setString(3, inventoryToString());
                 stmt.setInt(4, this.health);
-                stmt.setInt(5, this.currentRoom);
-                stmt.setString(6, inventoryToString());
-                stmt.setInt(7, this.health);
+//                stmt.setInt(5, this.currentRoom);
+//                stmt.setString(6, inventoryToString());
+//                stmt.setInt(7, this.health);
 
                 stmt.executeUpdate();
                 conn.commit();

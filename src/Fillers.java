@@ -82,7 +82,7 @@ public class Fillers {
                         rs.getString("item_type"),
                         rs.getInt("item_features"),
                         rs.getString("item_desc"),
-                        rs.getInt("item_location")
+                        rs.getInt("room_number")
                 );
             }
         } catch (SQLException e) {
