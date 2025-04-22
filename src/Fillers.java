@@ -43,7 +43,7 @@ public class Fillers {
     }
 
     public static Model.Item getItemFromID(int roomId) {
-        String query = "SELECT * FROM ITEMS WHERE item_id = ?";
+        String query = "SELECT * FROM ITEMS WHERE room_number = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 

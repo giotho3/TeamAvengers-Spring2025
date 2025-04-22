@@ -94,7 +94,7 @@ public class Combat {
     private void endBattle() {
         if (player.getHealth() <= 0) {
             System.out.println(player.getName() + " has been defeated!");
-            player.respawn();
+            player.loadGame();
         } else if (monster.getHealth() <= 0) {
             System.out.println(monster.getName() + " was vanquished!");
             monster.die();
